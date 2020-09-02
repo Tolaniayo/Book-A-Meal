@@ -1,4 +1,6 @@
-﻿
+﻿@model Book_A_Meal.Models.Home.HomeIndexViewModel
+@using PagedList;
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_MyLayout.cshtml";
@@ -94,9 +96,25 @@
         </div>
     </div>
 -->
+
+
 <!-- Start Products  -->
 <div class="products-box">
     <div class="container">
+        <!--Search Product or Category-->
+        <p><div class="olContent f1 why-text"><h4>Search Dishes/Category</h4></div> </p>
+        <form method="post">
+            <div class="olSearch">
+                <input type="text" name="search" placeholder="Enter Keyword" class="inputComn form-control" />
+                <div class="search">
+                    <button type="submit" class="search">
+                        <li class="search"><i class="fa fa-search"></i></li>
+                    </button>
+                </div>
+            </div>
+        </form>
+        
+        <!--Search Category End-->
         <div class="row">
             <div class="col-lg-12">
                 <div class="title-all text-center">
@@ -118,97 +136,86 @@
         </div>
 
         <div class="row special-list">
-            <div class="col-lg-3 col-md-6 special-grid best-seller">
-                <div class="products-single fix">
-                    <div class="box-img-hover">
-                        <div class="type-lb">
-                            <p class="sale">Sale</p>
-                        </div>
-                        <img src="~/Content/images/local-dish-poundo.jpg" class="img-fluid" alt="Image">
-                        <div class="mask-icon">
-                            <ul>
-                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
-                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
-                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
-                            </ul>
-                            <a class="cart" href="#">Add to Cart</a>
-                        </div>
-                    </div>
-                    <div class="why-text">
-                        <h4>Pounded yam</h4>
-                        <h5> #500.00</h5>
-                    </div>
-                </div>
-            </div>
+            @foreach (var item in Model.ListOfProducts)
+             {
+                if (item.CategoryId == 1)
+                {
+                    <div class="col-lg-3 col-md-6 special-grid top-featured">
+                        @* could be top-featured or best-seller*@
+                        <div class="products-single fix">
+                            <div class="box-img-hover">
+                                <div class="type-lb">
 
-            <div class="col-lg-3 col-md-6 special-grid top-featured">
-                <div class="products-single fix">
-                    <div class="box-img-hover">
-                        <div class="type-lb">
-                            <p class="new">New</p>
-                        </div>
-                        <img src="~/Content/images/main-dish-coconot-rice.jpg" class="img-fluid" alt="Image">
-                        <div class="mask-icon">
-                            <ul>
-                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
-                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
-                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
-                            </ul>
-                            <a class="cart" href="#">Add to Cart</a>
+                                    @if (item.Quantity > 0)
+                                    {
+                                        <p class="sale">Available</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="new">Not Available</p>
+                                    }
+                                </div>
+                                <img src="~/ProductImg/@item.ProductImage" class="img-fluid" alt="Image">
+                                <div class="mask-icon">
+                                    <ul>
+                                        <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
+                                        <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
+                                        <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
+                                    </ul>
+                                    @using (Html.BeginForm("AddToCart", "Home", new { productId = item.ProductId, url = "Index" }, FormMethod.Post))
+                                    {
+                                        <button class="cart" type="submit">Add to Cart</button>
+                                    }
+                                    
+                                </div>
+                            </div>
+                            <div class="why-text">
+                                <h4>@item.ProductName</h4>
+                                <h5> #@item.Price</h5>
+                            </div>
                         </div>
                     </div>
-                    <div class="why-text">
-                        <h4>Coconut Rice</h4>
-                        <h5> #1500.00</h5>
-                    </div>
-                </div>
-            </div>
+                }
+                if (item.CategoryId == 2)
+                {
+                 <div class="col-lg-3 col-md-6 special-grid best-seller">
+                    @* could be top-featured or best-seller*@
+                    <div class="products-single fix">
+                        <div class="box-img-hover">
+                            <div class="type-lb">
+                                
+                                @if (item.Quantity > 0)
+                                 {
+                                    <p class="sale">Available</p>
+                                 }
+                                 else
+                                 {
+                                    <p class="new">Not Available</p>
+                                 }
+                            </div>
+                            <img src="~/ProductImg/@item.ProductImage" class="img-fluid" alt="Image">
+                            <div class="mask-icon">
+                                <ul>
+                                    <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
+                                    <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
+                                    <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
+                                </ul>
+                                @using (Html.BeginForm("AddToCart", "Home", new { productId = item.ProductId, url = "Index" }, FormMethod.Post))
+                                {
+                                   <button class="cart" type="submit">Add to Cart</button>
+                                }
 
-            <div class="col-lg-3 col-md-6 special-grid top-featured">
-                <div class="products-single fix">
-                    <div class="box-img-hover">
-                        <div class="type-lb">
-                            <p class="sale">Sale</p>
+                            </div>
                         </div>
-                        <img src="~/Content/images/main-dish-jollof.jpg" class="img-fluid" alt="Image">
-                        <div class="mask-icon">
-                            <ul>
-                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
-                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
-                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
-                            </ul>
-                            <a class="cart" href="#">Add to Cart</a>
+                        <div class="why-text">
+                            <h4>@item.ProductName</h4>
+                            <h5> #@item.Price</h5>
                         </div>
                     </div>
-                    <div class="why-text">
-                        <h4>Jollof Rice</h4>
-                        <h5> #700.00</h5>
-                    </div>
-                </div>
-            </div>
+                 </div>
+                }
+             }
 
-            <div class="col-lg-3 col-md-6 special-grid best-seller">
-                <div class="products-single fix">
-                    <div class="box-img-hover">
-                        <div class="type-lb">
-                            <p class="sale">Sale</p>
-                        </div>
-                        <img src="~/Content/images/local-dish-amala.png" class="img-fluid" alt="Image">
-                        <div class="mask-icon">
-                            <ul>
-                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="View"><i class="fas fa-eye"></i></a></li>
-                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="Compare"><i class="fas fa-sync-alt"></i></a></li>
-                                <li><a href="#" data-toggle="tooltip" data-placement="right" title="Add to Wishlist"><i class="far fa-heart"></i></a></li>
-                            </ul>
-                            <a class="cart" href="#">Add to Cart</a>
-                        </div>
-                    </div>
-                    <div class="why-text">
-                        <h4>Amala</h4>
-                        <h5> #500.00</h5>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
